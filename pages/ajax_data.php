@@ -17,7 +17,8 @@
     $page = $_GET['page'];
     if($page=='nisn'){
     $nisn = $_POST['nisn'];
-    $t_data = $conn->query("select siswa.id_spp, siswa.nama, kelas.nama_kelas, spp.nominal from siswa inner join kelas ON kelas.id_kelas = siswa.id_kelas inner join spp ON spp.id_spp=siswa.id_spp where siswa.nisn = '$nisn'")->fetch_array();
+    $t_data = $conn->query("select siswa.nisn, siswa.id_spp, siswa.nama, kelas.nama_kelas, spp.nominal from siswa inner join kelas ON kelas.id_kelas = siswa.id_kelas inner join spp ON spp.id_spp=siswa.id_spp where siswa.nisn = '$nisn'")->fetch_array();
+    if(@$t_data['nisn'] == @$nisn){
 ?>    
     <div class="form-group">
         <label for="exampleFormControlInput1">Nama</label>
@@ -54,4 +55,20 @@
         <input type="text" class="form-control" value="<?= $t_data['nominal'] ?>">
         <input type="hidden" name="id_spp" value="<?php echo $t_data['id_spp'];?>">
     </div>
-<?php } ?>
+<?php 
+    }else{
+        echo "
+        <script language = javascript>
+            Swal.fire({
+                icon: 'error',
+                title: 'Nisn Yang Anda Inputkan Tidak Valid',  
+                showCancelButton: false,
+                confirmButtonText: 'Ok',
+            }).then((result) =>{
+                window.location.href='data_transaksi.php';
+            });
+        </script>
+        ";
+    }
+}
+?>

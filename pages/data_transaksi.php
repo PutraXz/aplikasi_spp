@@ -180,7 +180,7 @@ session_start();
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <button class="btn btn-primary" onclick="document.getElementById('add-data-keluar').style.display='block'">Data Transaksi</button>
+                        <button class="btn btn-primary" onclick="document.getElementById('add-data-transaksi').style.display='block'">Data Transaksi</button>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -247,7 +247,7 @@ session_start();
                                             <?= $data['nama_petugas']?>
                                         </td>
                                         <td>
-                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id_pembayaran']?>"  style="width:30px"><i class="fa-solid fa-pen-to-square"></i></button>
+                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id_pembayaran']?>"  style="width:30px"><i class="fa-solid fa-eye"></i></button>
                                         <a href="data_transaksi.php?page=hapus&id=<?= $data['id_pembayaran']?>"  class="btn btn-primary btn-sm delete_data"><i class="fa-solid fa-trash"></i></a>
                                         </td>
                                     </tr>
@@ -258,30 +258,7 @@ session_start();
                     <!-- /.card-body -->
                     <!-- modal edit user -->
                         <?php
-                          @$id = $_POST['id_pembayaran'];
-                          @$id_petugas = $_POST['id_petugas'];
-                          @$nisn = $_POST['nisn'];
-                          @$bulan_dibayar = $_POST['bulan_dibayar'];
-                          @$tahun_dibayar = $_POST['tahun_dibayar'];
-                          @$id_spp = $_POST['id_spp'];
-                            if(isset($_POST['edit'])){
-                                $edit = $conn->query("update pembayaran set id_petugas='$id_petugas', nisn='$nisn', bulan_dibayar='$bulan_dibayar', tahun_dibayar='$tahun_dibayar', id_spp='$id_spp' where id_pembayaran='$id'");
-                                if($edit){
-                                   echo "
-                                   <script language = javascript>
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Data Berhasil Diubah',  
-                                            showCancelButton: false,
-                                            confirmButtonText: 'Ok',
-                                        }).then((result) =>{
-                                            window.location.href='data_transaksi.php';
-                                        });
-                                    </script>
-                                   ";
-                                }
-                            }
-                            $query = $conn->query("select * from pembayaran inner join petugas ON petugas.id_petugas=pembayaran.id_petugas inner join siswa ON siswa.nisn = pembayaran.nisn inner join kelas ON kelas.id_kelas = siswa.id_kelas inner join spp ON spp.id_spp = pembayaran.id_spp");
+                            $query = $conn->query("select * from pembayaran inner join petugas on petugas.id_petugas=pembayaran.id_petugas inner join siswa on siswa.nisn=pembayaran.nisn inner join kelas on kelas.id_kelas=siswa.id_kelas inner join spp on spp.id_spp=pembayaran.id_spp");
                             while($data = $query->fetch_array()){
                         ?>
                         <div class="modal fade" id="modal-<?= $data['id_pembayaran']?>">
@@ -296,55 +273,34 @@ session_start();
                                     <div class="modal-body">
                                     <form action="" method="post">
                                             <div class="modal-body p-0">
-                                                <input type="hidden" name="id_pembayaran" value="<?= $data['id_pembayaran']?>">
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Petugas</label>
-                                                    <select name="id_petugas" class="form-control" id="">
-                                                        <option value="<?= $data['id_petugas']?>"><?= $data['nama_petugas']?></option>
-                                                        <?php 
-                                                            $petugas = $conn->query("select * from petugas where level='petugas'");
-                                                            while($p = $petugas->fetch_array()){
-                                                        ?>
-                                                        <option value="<?= $p['id_petugas'] ?>"><?= $p['nama_petugas'] ?></option>
-                                                        <?php } ?>
-                                                    </select>
+                                                    <label for="psw"><b>Nisn</b></label>
+                                                    <input class="form-control" type="text" value="<?= $data['nisn']?>">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">NISN</label>
-                                                    <input type="text" name="nisn" value="<?= $data['nisn']?>" class="form-control" >
+                                                    <label for="siswa"><b>Nama siswa</b></label>
+									                <input class="form-control" type="text" value="<?= $data['nama']?>" readonly>
                                                 </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Bulan Dibayar</label>
-                                                    <select name="bulan_dibayar" class="form-control" id="">
-                                                        <option value="<?= $data['bulan_dibayar']?>"><?= $data['bulan_dibayar']?></option>
-                                                        <?php foreach ($datas as $month){
-                                                         ?>
-                                                        <option value="<?= $month['Month'] ?>"><?= $month['Month'] ?></option>
-                                                         <?php } ?>
-                                                    </select>
+                                                    <label for="siswa"><b>Nama Kelas</b></label>
+                                                    <input class="form-control" type="text" value="<?= $data['nama_kelas']?>" readonly>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Tahun Dibayar</label>
-                                                    <select class="form-control" name="tahun_dibayar">
-                                                        <option value="<?= $data['tahun_dibayar'] ?>"><?= $data['tahun_dibayar'] ?></option>
-                                                    <?php foreach ($years as $year){
-                                                    ?>
-                                                        <option value="<?= $year ?>"><?= $year ?></option>
-                                                    <?php } ?>
-                                                    </select>
+                                                    <label for="siswa"><b>Tanggal Bayar</b></label>
+									                <input class="form-control" type="text" value="<?= $data['tgl_bayar']?>" readonly>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Nominal</label>
-                                                    <select name="id_spp" id="" class="form-control">
-                                                        <option value="<?= $data['id_spp'] ?>"><?= $data['nominal'] ?></option>
-                                                        <?php 
-                                                            $query3 = $conn->query("select * from spp");
-                                                            while($ruangan = $query3->fetch_array()){
-                                                        ?>
-                                                        <option value="<?= $ruangan['id']?>"><?= $ruangan['nominal'] ?></option>
-                                                        <?php } ?>
-                                                    </select>
+                                                    <label for="bulan_dibayar"><b>Bulan Dibayar</b></label>
+									                <input class="form-control" type="text" value="<?= $data['bulan_dibayar']?>" readonly>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="psw"><b>Tahun Dibayar</b></label>
+                                                    <input class="form-control" type="number" readonly value="<?= $data['tahun_dibayar']?>" readonly>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="siswa"><b>Nominal Yang Harus Dibayar</b></label>
+									                <input class="form-control" type="text" value="<?= $data['nominal'] ?>" readonly>
                                                 </div>
                                         </div>
                                         <div class="modal-footer justify-content-between">
@@ -361,6 +317,7 @@ session_start();
                     <!-- /modal edit user -->
                     <!-- modal add user -->
                     <?php
+                    if(isset($_POST['add'])){
                         @$id_petugas = $_SESSION['id_petugas'];
                         @$nisn = $_POST['nisn'];
                         @$tgl_bayar = date('Y-m-d');
@@ -368,30 +325,46 @@ session_start();
                         @$tahun_dibayar = $_POST['tahun_dibayar'];
                         @$id_spp = $_POST['id_spp'];
                         @$jumlah_bayar = $_POST['jumlah_bayar'];
-                    if(isset($_POST['add'])){
-                        $query2 = $conn->query("insert into pembayaran set id_petugas='$id_petugas', nisn='$nisn', tgl_bayar='$tgl_bayar', bulan_dibayar='$bulan_dibayar', tahun_dibayar='$tahun_dibayar', id_spp='$id_spp', jumlah_bayar='$jumlah_bayar'");
-                        if($query2){
+                        $c_pembayaran = $conn->query("select * from pembayaran where nisn='$nisn' and bulan_dibayar='$bulan_dibayar' and tahun_dibayar='$tahun_dibayar'")->num_rows;
+                        if($c_pembayaran < 1){
+                            $query2 = $conn->query("insert into pembayaran set id_petugas='$id_petugas', nisn='$nisn', tgl_bayar='$tgl_bayar', bulan_dibayar='$bulan_dibayar', tahun_dibayar='$tahun_dibayar', id_spp='$id_spp', jumlah_bayar='$jumlah_bayar'");
+                            if($query2){
+                                echo "
+                                <script language = javascript>
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Data Berhasil Ditambahkan',  
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Ok',
+                                    }).then((result) =>{
+                                        window.location.href='data_transaksi.php';
+                                    });
+                                </script>
+                            ";
+                            }
+                        }else{
                             echo "
-                            <script language = javascript>
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Data Berhasil Ditambahkan',  
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Ok',
-                                }).then((result) =>{
-                                    window.location.href='data_transaksi.php';
-                                });
-                            </script>
-                          ";
+                                <script language = javascript>
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Pembayaran Sudah Pernah Dilakukan',  
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Ok',
+                                    }).then((result) =>{
+                                        window.location.href='data_transaksi.php';
+                                    });
+                                </script>
+                             ";
                         }
+                        
                     }
                     ?>
-                    <div class="modal P-0 overflow-auto" id="add-data-keluar" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
+                    <div class="modal P-0 overflow-auto" id="add-data-transaksi" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
                         <div class="modal-dialog">
                             <div class="modal-content" style="width:1">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="staticBackdropLabel">Add Data Transaksi</h5>
-                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-keluar').style.display='none'"></button>
+                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-transaksi').style.display='none'"></button>
                                 </div>
                                 <form action="" method="post">
                                     <div class="modal-body">
@@ -429,7 +402,7 @@ session_start();
                                         </script>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-keluar').style.display='none'">Close</button>
+                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-transaksi').style.display='none'">Close</button>
                                         <button type="submit" class="btn btn-primary" name="add">Add Data</button>
                                     </div>
                                 </form>

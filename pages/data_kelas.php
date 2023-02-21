@@ -381,7 +381,7 @@ session_start();
         $('.delete_data').on('click',function(){
             var getLink = $(this).attr('href');
                 Swal.fire({
-                    title: "Yakin hapus data?",            
+                    imageUrl: 'iyakah.jpg',            
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
