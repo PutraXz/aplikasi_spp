@@ -141,6 +141,14 @@ session_start();
                             </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="data_history.php" class="nav-link">
+                            <i class="nav-icon fa-solid fa-clock-rotate-left"></i>
+                            <p>
+                                History Transaksi
+                            </p>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -265,7 +273,7 @@ session_start();
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Edit Data Transaksi</h4>
+                                        <h4 class="modal-title">Details Data Transaksi</h4>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -303,9 +311,8 @@ session_start();
 									                <input class="form-control" type="text" value="<?= $data['nominal'] ?>" readonly>
                                                 </div>
                                         </div>
-                                        <div class="modal-footer justify-content-between">
+                                        <div class="modal-footer ">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary" name="edit">Save changes</button>
                                         </div>
                                     </form>
                                 </div>

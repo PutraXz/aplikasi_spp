@@ -4,7 +4,6 @@ session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,8 +11,9 @@ session_start();
 
     <!-- bootstrap -->
     
-    <script src="../plugins/jquery/jquery.min.js"></script>
+    <script src="../plugins/jquery/jquery.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -118,7 +118,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="data_kelas.php" class="nav-link active">
+                            <a href="data_kelas.php" class="nav-link">
                             <i class="nav-icon fas fa-school"></i>
                             <p>
                                 Kelas
@@ -134,7 +134,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="data_transaksi.php" class="nav-link">
+                            <a href="data_transaksi.php" class="nav-link ">
                             <i class="nav-icon fa-solid fa-money-bill"></i>
                             <p>
                                 Transaksi
@@ -142,7 +142,7 @@ session_start();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="data_history.php" class="nav-link">
+                            <a href="data_history.php" class="nav-link active">
                             <i class="nav-icon fa-solid fa-clock-rotate-left"></i>
                             <p>
                                 History Transaksi
@@ -188,55 +188,91 @@ session_start();
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <a href="#" class="btn btn-primary" onclick="document.getElementById('add-data-kelas').style.display='block'">Add Data kelas</a>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama kelas</th>
-                                    <th>Kompetensi Keahlian</th>
-                                    <th>Aksi</th>
+                                    <th>NISN</th>
+                                    <th>Nama</th>
+                                    <th>Kelas</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                     include '../koneksi.php';
-                                    $page = @$_GET['page'];
-                                    if($page=='hapus'){
-                                        $id = $_GET['id'];
-                                        $del = $conn->query("delete from kelas where id_kelas='$id'");
-                                        if($del){
-                                            echo "
-                                            <script>
-                                                Swal.fire({
-                                                    icon: 'success',
-                                                    title: 'Data Berhasil Dihapus',  
-                                                    showCancelButton: false,
-                                                    confirmButtonText: 'Ok',
-                                                }).then((result) =>{
-                                                    window.location.href='data_kelas.php';
-                                                });
-                                            </script>
-                                            ";
-                                        }
-                                    };
                                     $no = 1;
-                                    $query = $conn->query("select * from kelas ");
+                                    $query = $conn->query("select * from pembayaran inner join petugas ON petugas.id_petugas=pembayaran.id_petugas inner join siswa ON siswa.nisn = pembayaran.nisn inner join kelas ON kelas.id_kelas = siswa.id_kelas inner join spp ON spp.id_spp = pembayaran.id_spp");
                                     while($data = $query->fetch_array()){ 
                                 ?>
                                     <tr>
                                         <td>
-                                            <?= $no++;?>
+                                            <a  data-toggle="modal" data-target="#modal-<?= $data['id_pembayaran']?>"  style="width:30px;cursor: pointer;">
+                                                <?= $no++ ?>  
+                                            </a>  
                                         </td>
                                         <td>
-                                            <?= $data['nama_kelas']?>
+                                            <a  data-toggle="modal" data-target="#modal-<?= $data['id_pembayaran']?>"  style="width:30px;cursor: pointer;">
+                                            <?= $data['nisn']?>
+                                            </a>
                                         </td>
                                         <td>
-                                            <?= $data['kompetensi_keahlian']?>
+                                            <a  data-toggle="modal" data-target="#modal-<?= $data['id_pembayaran']?>"  style="width:30px;cursor: pointer;">
+                                                <?= $data['nama']?>
+                                            </a>
                                         </td>
                                         <td>
-                                        <button type="button" class="btn btn-primary btn-sm mx-2" data-toggle="modal" data-target="#modal-<?= $data['id_kelas']?>"  style="width:30px"><i class="fa-solid fa-pen-to-square"></i></button>
-                                        <a href="data_kelas.php?page=hapus&id=<?= $data['id_kelas']?>" class="btn btn-primary btn-sm delete_data"><i class="fa-solid fa-trash"></i></a>
+                                            <a  data-toggle="modal" data-target="#modal-<?= $data['id_pembayaran']?>"  style="width:30px;cursor: pointer;">
+                                                <?= $data['nama_kelas']?>
+                                            </a>
+                                            <div class="modal fade" id="modal-<?= $data['id_pembayaran']?>">
+                                                <div class="modal-dialog modal-xl">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Details Data Transaksi</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                        <form action="" method="post">
+                                                                <div class="modal-body p-0">
+                                                                    <table class="table table-bordered table-striped">
+                                                                        <thead>
+                                                                            <th>Nisn</th>
+                                                                            <th>Nama</th>
+                                                                            <th>Kelas</th>
+                                                                            <th>Nominal Pembayaran</th>
+                                                                            <th>Bulan Dibayar</th>
+                                                                            <th>Tahun Dibayar</th>
+                                                                            <th>Petugas</th>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <?php
+                                                                                $get = $conn->query("select pembayaran.nisn,siswa.nama,kelas.nama_kelas,spp.nominal, petugas.nama_petugas, siswa.id_kelas, pembayaran.id_spp,pembayaran.bulan_dibayar,pembayaran.tahun_dibayar,pembayaran.id_petugas from pembayaran inner join siswa on siswa.nisn=pembayaran.nisn inner join kelas on kelas.id_kelas=siswa.id_kelas inner join spp on spp.id_spp=pembayaran.id_spp inner join petugas on petugas.id_petugas=pembayaran.id_petugas order by bulan_dibayar asc");
+                                                                                while($data = $get->fetch_array()){ 
+                                                                            ?>
+                                                                                <tr>
+                                                                                    <td><?= $data['nisn'] ?></td>
+                                                                                    <td><?= $data['nama'] ?></td>
+                                                                                    <td><?= $data['nominal'] ?></td>
+                                                                                    <td><?= $data['nama_kelas'] ?></td>
+                                                                                    <td><?= $data['bulan_dibayar'] ?></td>
+                                                                                    <td><?= $data['tahun_dibayar'] ?></td>
+                                                                                    <td><?= $data['nama_petugas'] ?></td>
+                                                                                </tr>
+                                                                            <?php } ?>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            <div class="modal-footer ">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
                                         </td>
                                     </tr>
                                     <?php }?>
@@ -244,107 +280,94 @@ session_start();
                         </table>
                     </div>
                     <!-- /.card-body -->
-                    <!-- modal edit user -->
-                        <?php
-                            @$id_kelas = $_POST['id_kelas'];
-                            @$nama_kelas = $_POST['nama_kelas'];
-                            @$kompetensi_keahlian = $_POST['kompetensi_keahlian'];
-                            if(isset($_POST['edit'])){
-                                $edit = $conn->query("update kelas set nama_kelas='$nama_kelas',kompetensi_keahlian='$kompetensi_keahlian' where id_kelas='$id_kelas'");
-                                if($edit){
-                                    echo "
-                                    <script language = javascript>
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Data Berhasil Diubah',  
-                                            showCancelButton: false,
-                                            confirmButtonText: 'Ok',
-                                        }).then((result) =>{
-                                            window.location.href='data_kelas.php';
-                                        });
-                                    </script>
-                                    ";
-                                }
-                            }
-                            $query = $conn->query("select * from kelas");
-                            while($data = $query->fetch_array()){
-                        ?>
-                        <div class="modal fade" id="modal-<?= $data['id_kelas']?>">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Edit Data kelas</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                    <form action="" method="post">
-                                            <div class="modal-body p-0">
-                                                <input type="hidden" name="id_kelas" value="<?= $data['id_kelas']?>">
-                                                <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Nama kelas</label>
-                                                    <input type="text" class="form-control" name="nama_kelas"  require value="<?= $data['nama_kelas']?>">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="exampleFormControlInput1">Kompetensi Keahlian</label>
-                                                    <input type="text" class="form-control" name="kompetensi_keahlian"  require value="<?= $data['kompetensi_keahlian']?>">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer justify-content-between">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary" name="edit">Save changes</button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!-- /.modal-content -->
-                            </div>
-                            <!-- /.modal-dialog -->
-                        </div>
-                        <?php } ?>
-                    <!-- /modal edit user -->
                     <!-- modal add user -->
                     <?php
-                    @$nama_kelas = $_POST['nama_kelas'];
-                    @$kompetensi_keahlian = $_POST['kompetensi_keahlian'];
                     if(isset($_POST['add'])){
-                        $add = $conn->query("insert into kelas set nama_kelas='$nama_kelas', kompetensi_keahlian='$kompetensi_keahlian'");
-                        if($add){
-                            echo "
-                            <script language = javascript>
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Data Berhasil Diubah',  
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Ok',
-                                }).then((result) =>{
-                                    window.location.href='data_kelas.php';
-                                });
-                          </script>
+                        @$id_petugas = $_SESSION['id_petugas'];
+                        @$nisn = $_POST['nisn'];
+                        @$tgl_bayar = date('Y-m-d');
+                        @$bulan_dibayar = $_POST['bulan_dibayar'];
+                        @$tahun_dibayar = $_POST['tahun_dibayar'];
+                        @$id_spp = $_POST['id_spp'];
+                        @$jumlah_bayar = $_POST['jumlah_bayar'];
+                        $c_pembayaran = $conn->query("select * from pembayaran where nisn='$nisn' and bulan_dibayar='$bulan_dibayar' and tahun_dibayar='$tahun_dibayar'")->num_rows;
+                        if($c_pembayaran < 1){
+                            $query2 = $conn->query("insert into pembayaran set id_petugas='$id_petugas', nisn='$nisn', tgl_bayar='$tgl_bayar', bulan_dibayar='$bulan_dibayar', tahun_dibayar='$tahun_dibayar', id_spp='$id_spp', jumlah_bayar='$jumlah_bayar'");
+                            if($query2){
+                                echo "
+                                <script language = javascript>
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Data Berhasil Ditambahkan',  
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Ok',
+                                    }).then((result) =>{
+                                        window.location.href='data_transaksi.php';
+                                    });
+                                </script>
                             ";
+                            }
+                        }else{
+                            echo "
+                                <script language = javascript>
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Pembayaran Sudah Pernah Dilakukan',  
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Ok',
+                                    }).then((result) =>{
+                                        window.location.href='data_transaksi.php';
+                                    });
+                                </script>
+                             ";
                         }
+                        
                     }
                     ?>
-                    <div class="modal P-0" id="add-data-kelas" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
+                    <div class="modal P-0 overflow-auto" id="add-data-transaksi" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="">
                         <div class="modal-dialog">
                             <div class="modal-content" style="width:1">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data kelas</h5>
-                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-kelas').style.display='none'"></button>
+                                    <h5 class="modal-title" id="staticBackdropLabel">Add Data Transaksi</h5>
+                                    <button type="button" class="btn-close btn-close-white" onclick="document.getElementById('add-data-transaksi').style.display='none'"></button>
                                 </div>
                                 <form action="" method="post">
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <label for="exampleFormControlInput1">Nama kelas</label>
-                                            <input type="text" class="form-control" name="nama_kelas"  require>
+                                            <label for="exampleFormControlInput1">NISN</label>
+                                            <input list="nisn_list" id="nisn" class="form-control" name="nisn"  require>
+                                                <datalist id="nisn_list">
+                                                    <?php
+                                                    $q_nisn = $conn->query('select nisn from siswa');
+                                                    while ($nisn = $q_nisn->fetch_array()) {
+                                                    ?>
+                                                    <option value="<?php echo $nisn['nisn'];?>">
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </datalist>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="exampleFormControlInput1">Kompetensi Keahlian</label>
-                                            <input type="text" class="form-control" name="kompetensi_keahlian"  require>
+                                        <div id="details-pembayaran">
+
                                         </div>
+                                        <script type="text/javascript">
+                                            $('#nisn').change(function() { 
+                                            var nisn = $(this).val(); 
+                                            $.ajax({
+                                                type: 'POST', 
+                                                url: 'ajax_data.php?page=nisn', 
+                                                data: 'nisn=' + nisn, 
+                                                success: function(response) { 
+                                                    console.log(response);
+                                                $('#details-pembayaran').html(response); 
+                                                }
+                                            });
+                                            });
+                                        
+                                        </script>
+                                    </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-kelas').style.display='none'">Close</button>
+                                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-data-transaksi').style.display='none'">Close</button>
                                         <button type="submit" class="btn btn-primary" name="add">Add Data</button>
                                     </div>
                                 </form>
@@ -372,7 +395,6 @@ session_start();
             </div>
         </footer>
     </div>
-    <!-- jangan lupa untuk menambahkan unset agar sweet alert tidak muncul lagi saat di refresh -->
     <!-- jQuery -->
     <script src="../logout.js"></script>
     <!-- Bootstrap 4 -->
@@ -389,7 +411,7 @@ session_start();
         $('.delete_data').on('click',function(){
             var getLink = $(this).attr('href');
                 Swal.fire({
-                    imageUrl: 'iyakah.jpg',            
+                    title: "Yakin hapus data?",            
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',

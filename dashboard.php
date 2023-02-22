@@ -141,6 +141,14 @@ session_start();
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="pages/data_history.php" class="nav-link">
+            <i class="nav-icon fa-solid fa-clock-rotate-left"></i>
+              <p>
+                History Transaksi
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
