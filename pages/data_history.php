@@ -248,7 +248,7 @@ session_start();
                                                                         </thead>
                                                                         <tbody>
                                                                             <?php
-                                                                                $get = $conn->query("select pembayaran.nisn,siswa.nama,kelas.nama_kelas,spp.nominal, petugas.nama_petugas, siswa.id_kelas, pembayaran.id_spp,pembayaran.bulan_dibayar,pembayaran.tahun_dibayar,pembayaran.id_petugas from pembayaran inner join siswa on siswa.nisn=pembayaran.nisn inner join kelas on kelas.id_kelas=siswa.id_kelas inner join spp on spp.id_spp=pembayaran.id_spp inner join petugas on petugas.id_petugas=pembayaran.id_petugas order by bulan_dibayar asc");
+                                                                                $get = $conn->query("select pembayaran.nisn,siswa.nama,kelas.nama_kelas,spp.nominal, petugas.nama_petugas, siswa.id_kelas, pembayaran.id_spp,pembayaran.bulan_dibayar,pembayaran.tahun_dibayar,pembayaran.id_petugas from pembayaran inner join siswa on siswa.nisn=pembayaran.nisn inner join kelas on kelas.id_kelas=siswa.id_kelas inner join spp on spp.id_spp=pembayaran.id_spp inner join petugas on petugas.id_petugas=pembayaran.id_petugas order by tgl_bayar desc");
                                                                                 while($data = $get->fetch_array()){ 
                                                                             ?>
                                                                                 <tr>
