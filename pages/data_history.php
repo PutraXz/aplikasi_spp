@@ -185,9 +185,41 @@ session_start();
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">DataTable with default features</h3>
+                        
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
+                        <h3 class="">Generate Laporan</h3>
+                        <button onclick="window.location='data_history.php'" class="btn btn-primary mb-2">Reset</button>
+                        <form action="cetak.php" method="post">
+                            <select name="tahun" id="tahun">
+                                <option value="">Pilih Tahun</option>
+                                <option value="all">All</option>
+                                <?php 
+                                    for ($t=2000; $t<date('Y')+3; $t++){
+                                ?>
+                                    <option value="<?= $t ?>"><?= $t ?></option>
+                                <?php } ?>
+                            </select>
+                            <div id="generate-laporan">
+                                
+                            </div>
+                        </form>
+                        <script type="text/javascript">
+                            $('#tahun').change(function() { 
+                                var tahun = $(this).val();
+                                $.ajax({
+                                    type: 'POST', 
+                                    url: 'ajax_data.php?page=laporan', 
+                                    data: 'tahun=' + tahun, 
+                                    success: function(response) { 
+                                            $('#generate-laporan').html(response);
+                                        
+                                    }
+                                });
+                            });
+                    
+                        </script>
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
